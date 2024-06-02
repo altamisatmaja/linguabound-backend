@@ -37,6 +37,9 @@ class UserAuthController extends Controller
             ]);
         }
 
+        $user->api_token = $token;
+        $user->save();
+
         return response()->json([
             'status' => 'succes',
             'message' => 'Berhasil login',

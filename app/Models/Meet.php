@@ -20,6 +20,7 @@ class Meet extends Model
         'link',
         'materi',
         'total_remaja',
+        'status',
         'mentor_id',
     ];
 }
