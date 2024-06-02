@@ -34,60 +34,60 @@ class LeaderboarController extends Controller
     }
 
 
-public function getLeaders(Request $request)
-{
-    $leaders = Remaja::orderBy('exp', 'desc')->take(10);
+    public function getLeaders(Request $request)
+    {
+        $leaders = Remaja::orderBy('exp', 'desc')->take(10);
 
-    $userPosition = $this->getUserPosition();
+        $userPosition = $this->getUserPosition();
 
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Data leaderboard berhasil didapatkan',
-        'data' => [
-            'all' => $leaders,
-            'position' => $userPosition
-        ]
-    ]);
-}
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data leaderboard berhasil didapatkan',
+            'data' => [
+                'all' => $leaders,
+                'position' => $userPosition
+            ]
+        ]);
+    }
 
+    public function getLeadersFromMentor(Request $request)
+    {
+        $leaders = Remaja::orderBy('exp', 'desc')->get();
 
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data leaderboard berhasil didapatkan',
+            'data' => $leaders
+        ]);
+    }
 
     public function getChildLeaders(Request $request)
     {
-        $user = $request->user();
-
+        $user = Auth::guard('api')->user();
         $children = Remaja::where('orang_tua_id', $user->id)->get();
 
-        $childrenLeaders = [];
+        $leaders = Remaja::orderBy('exp', 'desc')->get();
 
-        foreach ($children as $child) {
-            $childPosition = $this->getChildPosition($child);
-
-            $childData = [
-                'child_name' => $child->nama_orang_tua,
-                'position' => $childPosition
-            ];
-
-            array_push($childrenLeaders, $childData);
-        }
+        $childrenLeaders = $children->map(function ($child) use ($leaders) {
+            return $this->getChildPosition($child, $leaders);
+        });
 
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil didapat',
-            'data' => $childrenLeaders
+            'data' => [
+                'all' => $leaders,
+                'positions' => $childrenLeaders
+            ]
         ]);
     }
 
-    private function getChildPosition($child)
+    private function getChildPosition($child, $leaders)
     {
-        $leaders = Remaja::orderBy('exp', 'desc')->get();
-
         $childPosition = $leaders->search(function ($leader) use ($child) {
             return $leader->id === $child->id;
         });
 
-        $childPosition += 1;
-
-        return $childPosition;
+        return $childPosition !== false ? $childPosition + 1 : null;
     }
 }

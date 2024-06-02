@@ -33,5 +33,6 @@ Route::post('register/mentor', [RegisterMentorController::class, 'register']);
 
 Route::middleware(['auth:api'])->group(function () {
     Route::get('leaderboard/all', [LeaderboarController::class,'getLeaders']);
-    Route::get('leaderboard/position', [LeaderboarController::class,'getUserPosition']);
+    Route::get('leaderboard/parent', [LeaderboarController::class,'getChildLeaders']);
+    Route::get('leaderboard/mentor', [LeaderboarController::class,'getLeadersFromMentor']);
 });
