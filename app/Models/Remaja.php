@@ -9,7 +9,7 @@ class Remaja extends Model
 {
     use HasFactory;
 
-    protected $table_name = "remaja";
+    protected $table = "remaja";
 
     protected $fillable = [
         'nama_orang_tua',
@@ -19,6 +19,6 @@ class Remaja extends Model
         'kode_orang_tua',
         'user_id',
         'username',
-        'oranng_tua_id',
+        'orang_tua_id',
     ];
 }

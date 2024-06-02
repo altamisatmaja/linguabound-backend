@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\Moleculs\Guru;
+namespace App\Http\Controllers\Api\Moleculs\Mentor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class GuruGMeetController extends Controller
+class MentorGMeetController extends Controller
 {
     /**
      * Display a listing of the resource.
