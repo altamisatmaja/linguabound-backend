@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Organism;
 
 use App\Http\Controllers\Controller;
+use App\Models\Parents;
 use App\Models\Remaja;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -28,8 +29,10 @@ class UserAuthController extends Controller
 
         if ($user->role === 'Remaja') {
             $token = $user->createToken('mobile', ['role:Remaja'])->plainTextToken;
+            $akun = Remaja::where('user_id', $user->id)->first();
         } elseif ($user->role === 'Parent') {
             $token = $user->createToken('mobile', ['role:Parent'])->plainTextToken;
+            $akun = Parents::where('user_id', $user->id)->first();
         } else {
             return response()->json([
                 'status' => 'failed',
@@ -39,6 +42,8 @@ class UserAuthController extends Controller
 
         $user->api_token = $token;
         $user->save();
+
+        $user['detail'] = $akun;
 
         return response()->json([
             'status' => 'succes',

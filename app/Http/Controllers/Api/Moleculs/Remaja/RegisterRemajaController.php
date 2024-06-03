@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Moleculs\Remaja;
 
 use App\Http\Controllers\Controller;
 use App\Models\Remaja;
+use App\Models\ReportExercise;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +35,13 @@ class RegisterRemajaController extends Controller
                 'star' => 0,
                 'level' => 0,
             ]);
+
+            for ($i=1; $i < 4; $i++) {
+                $reportexercise = ReportExercise::create([
+                    'remaja_id' => $remaja->id,
+                    ''
+                ]);
+            }
 
             $token = $user->createToken('mobile', ['role:Remaja'])->plainTextToken;
             if ($remaja){

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Moleculs\Mentor\MentorAuthController;
 use App\Http\Controllers\Api\Moleculs\Mentor\RegisterMentorController;
 use App\Http\Controllers\Api\Moleculs\Parent\RegisterParentController;
 use App\Http\Controllers\Api\Moleculs\Remaja\RegisterRemajaController;
+use App\Http\Controllers\Api\Organism\ExerciseController;
 use App\Http\Controllers\Api\Organism\LeaderboarController;
 use App\Http\Controllers\Api\Organism\UserAuthController;
 use Illuminate\Http\Request;
@@ -30,9 +31,9 @@ Route::post('register/remaja', [RegisterRemajaController::class, 'register']);
 Route::post('register/parent', [RegisterParentController::class, 'register']);
 Route::post('register/mentor', [RegisterMentorController::class, 'register']);
 
-
 Route::middleware(['auth:api'])->group(function () {
     Route::get('leaderboard/all', [LeaderboarController::class,'getLeaders']);
     Route::get('leaderboard/parent', [LeaderboarController::class,'getChildLeaders']);
     Route::get('leaderboard/mentor', [LeaderboarController::class,'getLeadersFromMentor']);
+    Route::get('exercise', [ExerciseController::class, 'getExercise']);
 });
