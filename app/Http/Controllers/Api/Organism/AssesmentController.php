@@ -61,9 +61,8 @@ class AssesmentController extends Controller
         ]);
     }
 
-    public function submitExercise(Request $request, $bagianId, $subBagianId)
+    public function submitAssesment(Request $request)
     {
-
         $request->validate([
             'soal_id' => 'required|array',
             'jawaban' => 'required|array',
@@ -102,27 +101,27 @@ class AssesmentController extends Controller
 
         $isCompleted = $totalNilai >= 100;
 
+        if ($isCompleted) {
+            for ($i = 1; $i <= 5; $i++) {
+                ReportExercise::updateOrCreate(
+                    [
+                        'remaja_id' => $remaja->id,
+                        'bagian_id' => 1,
+                        'sub_bagian_id' => $i
+                    ],
+                    [
+                        'nilai' => 100,
+                        'completed' => true
+                    ]
+                );
+            }
 
-        $report = ReportExercise::where('remaja_id', $remaja->id)
-                    ->where('bagian_id', $bagianId)
-                    ->where('sub_bagian_id', $subBagianId)
-                    ->first();
-
-        if ($report) {
-            $report->nilai = $totalNilai;
-            $report->completed = $isCompleted;
-            $remaja->exp += $totalNilai;
-            $remaja->save();
-            $report->save();
+            $remaja->exp += 500;
         } else {
-            $report = new ReportExercise();
-            $report->remaja_id = $remaja->id;
-            $report->bagian_id = $bagianId;
-            $report->sub_bagian_id = $subBagianId;
-            $report->nilai = $totalNilai;
-            $report->completed = true;
-            $report->save();
+            $remaja->exp += $totalNilai;
         }
+
+        $remaja->save();
 
         return response()->json([
             'status' => 'success',

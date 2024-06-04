@@ -44,7 +44,6 @@ Route::post('register/mentor', [RegisterMentorController::class, 'register']);
 Route::post('password/forgot',[ForgotPasswordController::class,'forgotPassword']);
 Route::post('password/reset',[ResetPasswordController::class,'resetPassword']);
 
-
 Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [UserAuthController::class, 'logout']);
 
@@ -61,6 +60,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('exercise/submit/{bagian_id}/{sub_bagian_id}', [ExerciseController::class, 'submitExercise']);
 
     Route::get('assesment', [AssesmentController::class, 'getAssesment']);
+
     Route::post('assesment/submit', [AssesmentController::class, 'submitAssesment']);
 
     Route::get('meet', [GMeetController::class,'list']);
@@ -69,7 +69,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('meet/create', [MentorGMeetController::class,'createMeet']);
     Route::post('meet/publish/{id}', [MentorGMeetController::class,'publishMeet']);
     Route::post('meet/join/{id}', [GMeetController::class,'joinMeet']);
-
 
     Route::post('linked', [LinkedAccountParentConroller::class,'linkAccount']);
 
