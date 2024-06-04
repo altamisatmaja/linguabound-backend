@@ -8,9 +8,11 @@ use App\Http\Controllers\Api\Moleculs\Otp\ForgotPasswordController;
 use App\Http\Controllers\Api\Moleculs\Otp\ResetPasswordController;
 use App\Http\Controllers\Api\Moleculs\Parent\ProfileAccountParentController;
 use App\Http\Controllers\Api\Moleculs\Parent\RegisterParentController;
+use App\Http\Controllers\Api\Moleculs\Parent\ReportExerciseParentController;
 use App\Http\Controllers\Api\Moleculs\Remaja\LinkedAccountParentConroller;
 use App\Http\Controllers\Api\Moleculs\Remaja\ProfileAccountRemajaController;
 use App\Http\Controllers\Api\Moleculs\Remaja\RegisterRemajaController;
+use App\Http\Controllers\Api\Organism\AssesmentController;
 use App\Http\Controllers\Api\Organism\ExerciseController;
 use App\Http\Controllers\Api\Organism\GMeetController;
 use App\Http\Controllers\Api\Organism\LeaderboarController;
@@ -42,7 +44,6 @@ Route::post('register/mentor', [RegisterMentorController::class, 'register']);
 Route::post('password/forgot',[ForgotPasswordController::class,'forgotPassword']);
 Route::post('password/reset',[ResetPasswordController::class,'resetPassword']);
 
-
 Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [UserAuthController::class, 'logout']);
 
@@ -53,8 +54,19 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('exercise', [ExerciseController::class, 'getExercise']);
     Route::get('exercise/state', [ExerciseController::class, 'getReportExercises']);
 
+    Route::get('exercise/report', [ReportExerciseParentController::class, 'report']);
+
     Route::get('exercise/start/{bagian_id}/{sub_bagian_id}', [ExerciseController::class, 'startExercise']);
     Route::post('exercise/submit/{bagian_id}/{sub_bagian_id}', [ExerciseController::class, 'submitExercise']);
+
+    Route::get('assesment', [AssesmentController::class, 'getAssesment']);
+
+    Route::post('assesment/submit', [AssesmentController::class, 'submitAssesment']);
+
+    Route::get('meet', [GMeetController::class,'list']);
+    Route::get('meet/show/{id}', [GMeetController::class,'show']);
+
+    Route::get('meet/list', [MentorGMeetController::class,'list']);
 
     Route::post('meet/create', [MentorGMeetController::class,'createMeet']);
     Route::post('meet/publish/{id}', [MentorGMeetController::class,'publishMeet']);
@@ -64,4 +76,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('profile/update/remaja', [ProfileAccountRemajaController::class,'updateProfile']);
     Route::post('profile/update/parent', [ProfileAccountParentController::class,'updateProfile']);
+    Route::post('profile/update/password', [UserAuthController::class,'updatePassword']);
+
+    Route::get('logged', [UserAuthController::class,'logged']);
 });

@@ -9,6 +9,17 @@ use Illuminate\Http\Request;
 
 class MentorGMeetController extends Controller
 {
+    public function list(){
+        $user = auth()->user();
+        $mentor = Mentor::where('user_id', $user->id)->first();
+        $meet = Meet::where('mentor_id', $mentor->id)->get();
+
+        return response()->json([
+            'success' => 'success',
+            'message' => 'Data berhasil didapatkan',
+            'data' => $meet
+        ]);
+    }
     public function createMeet(Request $request)
     {
         $request->validate([
@@ -18,11 +29,9 @@ class MentorGMeetController extends Controller
             'jam_berakhir' => 'required|date_format:Y-m-d H:i:s|after:jam_mulai',
             'tanggal' => 'required|date_format:Y-m-d',
             'link' => 'required|string',
-            'materi' => 'required|file|mimes:pdf|max:2048',
+            'materi' => 'required|string',
             'total_remaja' => 'required|integer|min:1',
         ]);
-
-        $materiPath = $request->file('materi')->storeAs('public/materi', $request->file('materi')->hashName());
 
         $user = $request->user();
         $mentor = Mentor::where('user_id', $user->id)->first();
@@ -34,7 +43,7 @@ class MentorGMeetController extends Controller
         $meet->jam_berakhir = $request->jam_berakhir;
         $meet->tanggal = $request->tanggal;
         $meet->link = $request->link;
-        $meet->materi = $materiPath;
+        $meet->materi = $request->materi;
         $meet->total_remaja = $request->total_remaja;
         $meet->status = 'Belum dipublish';
         $meet->mentor_id = $mentor->id;
@@ -44,8 +53,8 @@ class MentorGMeetController extends Controller
             'status' => 'success',
             'message' => 'Kelas berhasil dibuat'
         ]);
-
     }
+
 
     public function publishMeet($meetId)
     {

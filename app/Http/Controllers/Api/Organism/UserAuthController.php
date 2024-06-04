@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Organism;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bagian;
+use App\Models\Mentor;
 use App\Models\Parents;
 use App\Models\Remaja;
 use App\Models\ReportExercise;
@@ -16,7 +17,28 @@ use Illuminate\Validation\ValidationException;
 class UserAuthController extends Controller
 {
     public function logged(Request $request){
+        $baseUrl = $request->root();
         $user = auth()->user();
+
+        // $akun = null;
+
+        if ($user->role === 'Remaja') {
+            $akun = Remaja::where('user_id', $user->id)->first();
+        } elseif ($user->role === 'Parent') {
+            $akun = Parents::where('user_id', $user->id)->first();
+        } else {
+            $akun = Mentor::where('user_id', $user->id)->first();
+        }
+
+        $user['foto'] = asset('storage/storage/profile/'.$user->foto);
+        // dd($akun);
+        $user['detail'] = $akun;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Anda login',
+            'data' => $user
+        ]);
     }
     public function login(Request $request)
 {
@@ -35,13 +57,19 @@ class UserAuthController extends Controller
     //     ]);
     // }
 
+    if(!$user){
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'Akun tidak ditemukan'
+        ], 401);
+    }
+
 
     // $token = null;
     // $akun = null;
 
     if ($user->role === 'Remaja') {
         $token = $user->createToken('mobile', ['role:Remaja'])->plainTextToken;
-        // dd($token);
         $akun = Remaja::where('user_id', $user->id)->first();
     } elseif ($user->role === 'Parent') {
         $token = $user->createToken('mobile', ['role:Parent'])->plainTextToken;
@@ -138,5 +166,30 @@ class UserAuthController extends Controller
         ]);
     }
 
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        if (Hash::check($request->old_password, $user->password)) {
+           return response()->json([
+            'status' => 'failed',
+            'message' => 'Harap masukkan password lama yang sesuai!'
+           ], 401);
+        }
+
+        $user->password = Hash::make($request->password);
+
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password berhasil diubah'
+        ]);
+    }
 
 }

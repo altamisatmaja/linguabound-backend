@@ -10,6 +10,32 @@ use Illuminate\Http\Request;
 
 class GMeetController extends Controller
 {
+    public function list(){
+        $meets = Meet::where('status', 'Sudah dipublish')->get();
+
+        $meets->transform(function ($meet) {
+            $meet->materi = asset('storage/materi/' . $meet->materi);
+            return $meet;
+        });
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil didapatkan',
+            'data' => $meets
+        ]);
+    }
+
+    public function show($id){
+        $meet = Meet::where('id', $id)->first();
+
+        $meet['materi'] = asset('storage/materi/'.$meet->materi);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil didapatkan',
+            'data' => $meet
+        ]);
+    }
     public function joinMeet(Request $request, $meet_id)
     {
         $user = $request->user();
