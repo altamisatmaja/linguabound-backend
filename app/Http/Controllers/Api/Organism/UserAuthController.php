@@ -57,6 +57,13 @@ class UserAuthController extends Controller
     //     ]);
     // }
 
+    if(!$user){
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'Akun tidak ditemukan'
+        ], 401);
+    }
+
 
     // $token = null;
     // $akun = null;
