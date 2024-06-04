@@ -20,7 +20,7 @@ class UserAuthController extends Controller
         $baseUrl = $request->root();
         $user = auth()->user();
 
-        $akun = null;
+        // $akun = null;
 
         if ($user->role === 'Remaja') {
             $akun = Remaja::where('user_id', $user->id)->first();
@@ -31,6 +31,7 @@ class UserAuthController extends Controller
         }
 
         $user['foto'] = $baseUrl.'/'.$user->foto;
+        // dd($akun);
         $user['detail'] = $akun;
 
         return response()->json([
@@ -158,5 +159,23 @@ class UserAuthController extends Controller
         ]);
     }
 
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        $user->password = Hash::make($request->password);
+
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password berhasil diubah'
+        ]);
+    }
 
 }

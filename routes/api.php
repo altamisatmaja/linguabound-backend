@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Moleculs\Otp\ForgotPasswordController;
 use App\Http\Controllers\Api\Moleculs\Otp\ResetPasswordController;
 use App\Http\Controllers\Api\Moleculs\Parent\ProfileAccountParentController;
 use App\Http\Controllers\Api\Moleculs\Parent\RegisterParentController;
+use App\Http\Controllers\Api\Moleculs\Parent\ReportExerciseParentController;
 use App\Http\Controllers\Api\Moleculs\Remaja\LinkedAccountParentConroller;
 use App\Http\Controllers\Api\Moleculs\Remaja\ProfileAccountRemajaController;
 use App\Http\Controllers\Api\Moleculs\Remaja\RegisterRemajaController;
@@ -53,6 +54,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('exercise', [ExerciseController::class, 'getExercise']);
     Route::get('exercise/state', [ExerciseController::class, 'getReportExercises']);
 
+    Route::get('exercise/report', [ReportExerciseParentController::class, 'report']);
+
     Route::get('exercise/start/{bagian_id}/{sub_bagian_id}', [ExerciseController::class, 'startExercise']);
     Route::post('exercise/submit/{bagian_id}/{sub_bagian_id}', [ExerciseController::class, 'submitExercise']);
 
@@ -64,6 +67,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('profile/update/remaja', [ProfileAccountRemajaController::class,'updateProfile']);
     Route::post('profile/update/parent', [ProfileAccountParentController::class,'updateProfile']);
+    Route::post('profile/update/password', [UserAuthController::class,'updatePassword']);
 
     Route::get('logged', [UserAuthController::class,'logged']);
 });

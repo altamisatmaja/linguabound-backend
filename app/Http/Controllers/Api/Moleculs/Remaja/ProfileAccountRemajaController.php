@@ -43,4 +43,5 @@ class ProfileAccountRemajaController extends Controller
 
         return response()->json(['message' => 'Profile updated successfully']);
     }
+
 }

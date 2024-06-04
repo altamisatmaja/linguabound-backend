@@ -123,8 +123,6 @@ class ExerciseController extends Controller
     }
 
 
-
-
     public function getReportExercises(Request $request)
     {
         $user = $request->user();
