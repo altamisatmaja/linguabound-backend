@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Moleculs\Mentor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mentor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,26 +18,33 @@ class MentorAuthController extends Controller
             'password' => 'required',
         ]);
 
-        $mentor = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-        if (!$mentor || !Hash::check($request->password, $mentor->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
-        if ($mentor->role !== 'Mentor') {
+        if ($user->role !== 'Mentor') {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'Anda tidak memiliki otorisasi'
             ]);
         }
 
+        $mentor = Mentor::where('user_id', $user->id)->first();
+        $token = $user->createToken('mobile', ['role:Mentor'])->plainTextToken;
+
+        $user->api_token = $token;
+        $user->save();
+        $user['detail'] = $mentor;
+
         return response()->json([
             'status' => 'succes',
             'message' => 'Berhasil login',
-            'token' => $mentor->createToken('mobile', ['role:Mentor'])->plainTextToken,
-            'data' => $mentor,
+            'token' => $user->createToken('mobile', ['role:Mentor'])->plainTextToken,
+            'data' => $user,
         ]);
     }
 

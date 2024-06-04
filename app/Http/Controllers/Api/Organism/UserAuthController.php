@@ -15,6 +15,9 @@ use Illuminate\Validation\ValidationException;
 
 class UserAuthController extends Controller
 {
+    public function logged(Request $request){
+        $user = auth()->user();
+    }
     public function login(Request $request)
 {
     $request->validate([
