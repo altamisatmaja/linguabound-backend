@@ -66,6 +66,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('meet', [GMeetController::class,'list']);
     Route::get('meet/show/{id}', [GMeetController::class,'show']);
 
+    Route::get('meet/list', [MentorGMeetController::class,'list']);
+
     Route::post('meet/create', [MentorGMeetController::class,'createMeet']);
     Route::post('meet/publish/{id}', [MentorGMeetController::class,'publishMeet']);
     Route::post('meet/join/{id}', [GMeetController::class,'joinMeet']);
