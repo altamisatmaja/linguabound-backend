@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Moleculs\Mentor\RegisterMentorController;
 use App\Http\Controllers\Api\Moleculs\Mentor\MenntorGMeetController;
 use App\Http\Controllers\Api\Moleculs\Otp\ForgotPasswordController;
 use App\Http\Controllers\Api\Moleculs\Otp\ResetPasswordController;
+use App\Http\Controllers\Api\Moleculs\Parent\ProfileAccountParentController;
 use App\Http\Controllers\Api\Moleculs\Parent\RegisterParentController;
 use App\Http\Controllers\Api\Moleculs\Remaja\LinkedAccountParentConroller;
 use App\Http\Controllers\Api\Moleculs\Remaja\ProfileAccountRemajaController;
@@ -62,4 +63,5 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('linked', [LinkedAccountParentConroller::class,'linkAccount']);
 
     Route::post('profile/update/remaja', [ProfileAccountRemajaController::class,'updateProfile']);
+    Route::post('profile/update/parent', [ProfileAccountParentController::class,'updateProfile']);
 });

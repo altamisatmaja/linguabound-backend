@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Api\Moleculs\Remaja;
+namespace App\Http\Controllers\Api\Moleculs\Parent;
 
 use App\Http\Controllers\Controller;
-use App\Models\Remaja;
+use App\Models\Parents;
 use Hash;
 use Illuminate\Http\Request;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
-class ProfileAccountRemajaController extends Controller
+class ProfileAccountParentController extends Controller
 {
     public function updateProfile(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
-            'username' => 'required|string',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user = auth()->user();
-        $remaja = Remaja::where('user_id', $user->id)->first();
+        $parent = Parents::where('user_id', $user->id)->first();
+        // dd($user);
 
         $user->name = $request->name;
 
@@ -37,8 +37,8 @@ class ProfileAccountRemajaController extends Controller
             $user->foto = $fotoPath;
         }
 
-        $remaja->username = $request->username;
-        $remaja->save();
+        $parent->nama_lengkap = $request->name;
+        $parent->save();
         $user->save();
 
         return response()->json(['message' => 'Profile updated successfully']);
