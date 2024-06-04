@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Moleculs\Otp\ForgotPasswordController;
 use App\Http\Controllers\Api\Moleculs\Otp\ResetPasswordController;
 use App\Http\Controllers\Api\Moleculs\Parent\RegisterParentController;
 use App\Http\Controllers\Api\Moleculs\Remaja\LinkedAccountParentConroller;
+use App\Http\Controllers\Api\Moleculs\Remaja\ProfileAccountRemajaController;
 use App\Http\Controllers\Api\Moleculs\Remaja\RegisterRemajaController;
 use App\Http\Controllers\Api\Organism\ExerciseController;
 use App\Http\Controllers\Api\Organism\GMeetController;
@@ -59,4 +60,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('meet/join/{id}', [GMeetController::class,'joinMeet']);
 
     Route::post('linked', [LinkedAccountParentConroller::class,'linkAccount']);
+
+    Route::post('profile/update/remaja', [ProfileAccountRemajaController::class,'updateProfile']);
 });
