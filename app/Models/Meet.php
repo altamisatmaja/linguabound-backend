@@ -9,7 +9,7 @@ class Meet extends Model
 {
     use HasFactory;
 
-    protected $table_name = "meet";
+    protected $table = "meet";
 
     protected $fillable = [
         'topik',
@@ -20,6 +20,7 @@ class Meet extends Model
         'link',
         'materi',
         'total_remaja',
+        'status',
         'mentor_id',
     ];
 }

@@ -9,7 +9,7 @@ class SubBagian extends Model
 {
     use HasFactory;
 
-    protected $table_name = "sub_bagian";
+    protected $table = "sub_bagian";
 
     protected $fillable = [
         'nama_sub_bagian',

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\Moleculs\Remaja;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bagian;
 use App\Models\Remaja;
+use App\Models\ReportExercise;
+use App\Models\SubBagian;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +37,20 @@ class RegisterRemajaController extends Controller
                 'star' => 0,
                 'level' => 0,
             ]);
+
+            $bagian_ids = Bagian::all();
+            foreach ($bagian_ids as $bagian) {
+                $sub_bagian_ids = SubBagian::where('bagian_id', $bagian->id)->get();
+                foreach ($sub_bagian_ids as $sub_bagian) {
+                    ReportExercise::create([
+                        'remaja_id' => $remaja->id,
+                        'bagian_id' => $bagian->id,
+                        'sub_bagian_id' => $sub_bagian->id,
+                        'nilai' => 0,
+                        'completed' => 0,
+                    ]);
+                }
+            }
 
             $token = $user->createToken('mobile', ['role:Remaja'])->plainTextToken;
             if ($remaja){

@@ -3,63 +3,52 @@
 namespace App\Http\Controllers\Api\Organism;
 
 use App\Http\Controllers\Controller;
+use App\Models\Meet;
+use App\Models\MeetMember;
+use App\Models\Remaja;
 use Illuminate\Http\Request;
 
 class GMeetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function joinMeet(Request $request, $meet_id)
     {
-        //
-    }
+        $user = $request->user();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        if ($user->role !== 'Remaja') {
+            return response()->json(['message' => 'Unauthorized access'], 403);
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $remaja = Remaja::where('user_id', $user->id)->first();
+        $remajaId = $remaja->id;
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $meet = Meet::findOrFail($meet_id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $alreadyJoined = MeetMember::where('meet_id', $meet_id)
+            ->where('remaja_id', $remajaId)
+            ->exists();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        if ($alreadyJoined) {
+            return response()->json(['message' => 'Remaja sudah terdaftar dalam kelas ini', 'meet_id' => $meet_id]);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $jumlahRemajaTerdaftar = MeetMember::where('meet_id', $meet_id)->count();
+
+        if ($jumlahRemajaTerdaftar >= $meet->total_remaja) {
+            return response()->json(['message' => 'Kelas sudah penuh, tidak bisa bergabung'], 400);
+        }
+
+        $meetMember = new MeetMember();
+        $meetMember->meet_id = $meet_id;
+        $meetMember->remaja_id = $remajaId;
+        $meetMember->save();
+
+        $remaja->star += 1;
+        $remaja->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Remaja berhasil bergabung dalam kelas',
+            'data' => $meet_id
+        ]);
     }
 }
