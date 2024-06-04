@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Organism;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bagian;
+use App\Models\Mentor;
 use App\Models\Parents;
 use App\Models\Remaja;
 use App\Models\ReportExercise;
@@ -16,7 +17,27 @@ use Illuminate\Validation\ValidationException;
 class UserAuthController extends Controller
 {
     public function logged(Request $request){
+        $baseUrl = $request->root();
         $user = auth()->user();
+
+        $akun = null;
+
+        if ($user->role === 'Remaja') {
+            $akun = Remaja::where('user_id', $user->id)->first();
+        } elseif ($user->role === 'Parent') {
+            $akun = Parents::where('user_id', $user->id)->first();
+        } else {
+            $akun = Mentor::where('user_id', $user->id)->first();
+        }
+
+        $user['foto'] = $baseUrl.'/'.$user->foto;
+        $user['detail'] = $akun;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Anda login',
+            'data' => $user
+        ]);
     }
     public function login(Request $request)
 {
@@ -41,7 +62,6 @@ class UserAuthController extends Controller
 
     if ($user->role === 'Remaja') {
         $token = $user->createToken('mobile', ['role:Remaja'])->plainTextToken;
-        // dd($token);
         $akun = Remaja::where('user_id', $user->id)->first();
     } elseif ($user->role === 'Parent') {
         $token = $user->createToken('mobile', ['role:Parent'])->plainTextToken;

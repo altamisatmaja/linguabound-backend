@@ -64,4 +64,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('profile/update/remaja', [ProfileAccountRemajaController::class,'updateProfile']);
     Route::post('profile/update/parent', [ProfileAccountParentController::class,'updateProfile']);
+
+    Route::get('logged', [UserAuthController::class,'logged']);
 });
