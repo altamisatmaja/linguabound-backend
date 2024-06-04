@@ -159,14 +159,21 @@ class UserAuthController extends Controller
         ]);
     }
 
-
     public function updatePassword(Request $request)
     {
         $request->validate([
+            'old_password' => 'required|string',
             'password' => 'required|string',
         ]);
 
         $user = auth()->user();
+
+        if (Hash::check($request->old_password, $user->password)) {
+           return response()->json([
+            'status' => 'failed',
+            'message' => 'Harap masukkan password lama yang sesuai!'
+           ], 401);
+        }
 
         $user->password = Hash::make($request->password);
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Moleculs\Parent\ReportExerciseParentController;
 use App\Http\Controllers\Api\Moleculs\Remaja\LinkedAccountParentConroller;
 use App\Http\Controllers\Api\Moleculs\Remaja\ProfileAccountRemajaController;
 use App\Http\Controllers\Api\Moleculs\Remaja\RegisterRemajaController;
+use App\Http\Controllers\Api\Organism\AssesmentController;
 use App\Http\Controllers\Api\Organism\ExerciseController;
 use App\Http\Controllers\Api\Organism\GMeetController;
 use App\Http\Controllers\Api\Organism\LeaderboarController;
@@ -58,6 +59,9 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('exercise/start/{bagian_id}/{sub_bagian_id}', [ExerciseController::class, 'startExercise']);
     Route::post('exercise/submit/{bagian_id}/{sub_bagian_id}', [ExerciseController::class, 'submitExercise']);
+
+    Route::get('assesment', [AssesmentController::class, 'getAssesment']);
+    Route::post('assesment/submit', [AssesmentController::class, 'submitAssesment']);
 
     Route::post('meet/create', [MentorGMeetController::class,'createMeet']);
     Route::post('meet/publish/{id}', [MentorGMeetController::class,'publishMeet']);
