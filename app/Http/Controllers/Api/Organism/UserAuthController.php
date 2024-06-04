@@ -15,6 +15,9 @@ use Illuminate\Validation\ValidationException;
 
 class UserAuthController extends Controller
 {
+    public function logged(Request $request){
+        $user = auth()->user();
+    }
     public function login(Request $request)
 {
     $request->validate([
@@ -22,19 +25,23 @@ class UserAuthController extends Controller
         'password' => 'required',
     ]);
 
+    // dd($request->all());
+
     $user = User::where('email', $request->email)->first();
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
-    }
+    // if (!$user || !Hash::check($request->password, $user->password)) {
+    //     throw ValidationException::withMessages([
+    //         'email' => ['The provided credentials are incorrect.'],
+    //     ]);
+    // }
 
-    $token = null;
-    $akun = null;
+
+    // $token = null;
+    // $akun = null;
 
     if ($user->role === 'Remaja') {
         $token = $user->createToken('mobile', ['role:Remaja'])->plainTextToken;
+        // dd($token);
         $akun = Remaja::where('user_id', $user->id)->first();
     } elseif ($user->role === 'Parent') {
         $token = $user->createToken('mobile', ['role:Parent'])->plainTextToken;
