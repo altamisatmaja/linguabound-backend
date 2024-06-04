@@ -102,7 +102,7 @@ class AssesmentController extends Controller
         $isCompleted = $totalNilai >= 100;
 
         if ($isCompleted) {
-            for ($i = 1; $i <= 5; $i++) {
+            for ($i = 1; $i <= 4; $i++) {
                 ReportExercise::updateOrCreate(
                     [
                         'remaja_id' => $remaja->id,
@@ -115,6 +115,19 @@ class AssesmentController extends Controller
                     ]
                 );
             }
+
+            ReportExercise::updateOrCreate(
+                [
+                    'remaja_id' => $remaja->id,
+                    'bagian_id' => 2,
+                    'sub_bagian_id' => 1
+                ],
+                [
+                    'nilai' => 100,
+                    'completed' => true
+                ]
+            );
+
 
             $remaja->exp += 500;
         } else {

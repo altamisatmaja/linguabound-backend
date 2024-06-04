@@ -143,13 +143,16 @@ class ExerciseController extends Controller
             ], 404);
         }
 
-        $reportExercises = ReportExercise::where('remaja_id', $remaja->id)->get();
+        $reportExercises = ReportExercise::where('remaja_id', $remaja->id)
+                            ->orderBy('bagian_id')
+                            ->orderBy('sub_bagian_id')
+                            ->get();
 
         $reportExercises->transform(function ($reportExercise) {
             $reportExercise->nama_bagian = Bagian::where('id', $reportExercise->bagian_id)->value('nama_bagian');
             $reportExercise->nama_sub_bagian = SubBagian::where('id', $reportExercise->sub_bagian_id)->value('nama_sub_bagian');
 
-            unset($reportExercise->created_at, $reportExercise->updated_at);
+            // unset($reportExercise->created_at, $reportExercise->updated_at);
             return $reportExercise;
         });
 
