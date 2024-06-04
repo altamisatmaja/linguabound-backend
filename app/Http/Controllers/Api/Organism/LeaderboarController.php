@@ -16,21 +16,21 @@ class LeaderboarController extends Controller
     $currentUser = Remaja::where('user_id', $user->id)->first();
 
     if (!$currentUser) {
-        return null; // Jika user tidak ditemukan, kembalikan null
+        return null;
     }
 
-    $leaders = Remaja::orderBy('exp', 'desc')->get();
+    $leaders = Remaja::with('user')->orderBy('exp', 'desc')->get();
 
     $userPosition = $leaders->search(function ($leader) use ($currentUser) {
         return $leader->id === $currentUser->id;
     });
 
-    return $userPosition !== false ? $userPosition + 1 : null; // Jika posisi ditemukan, kembalikan posisi + 1
+    return $userPosition !== false ? $userPosition + 1 : null;
 }
 
 public function getLeaders(Request $request)
 {
-    $leaders = Remaja::orderBy('exp', 'desc')->take(10)->get(); // Peroleh 10 pemimpin teratas dengan metode get()
+    $leaders = Remaja::with('user')->orderBy('exp', 'desc')->take(10)->get();
 
     $userPosition = $this->getUserPosition($request);
 

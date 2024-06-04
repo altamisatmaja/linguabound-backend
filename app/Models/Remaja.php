@@ -21,4 +21,9 @@ class Remaja extends Model
         'username',
         'orang_tua_id',
     ];
+
+
+    public function user(){
+        return $this->hasOne(User::class,'id','user_id');
+    }
 }
