@@ -18,7 +18,7 @@ class MentorGMeetController extends Controller
             'jam_berakhir' => 'required|date_format:Y-m-d H:i:s|after:jam_mulai',
             'tanggal' => 'required|date_format:Y-m-d',
             'link' => 'required|string',
-            'materi' => 'required|file|mimes:pdf|max:2048',
+            'materi' => 'required|file|mimes:pdf',
             'total_remaja' => 'required|integer|min:1',
         ]);
 
