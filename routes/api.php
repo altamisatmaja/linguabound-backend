@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Moleculs\Mentor\MentorGMeetController;
 use App\Http\Controllers\Api\Moleculs\Mentor\RegisterMentorController;
 use App\Http\Controllers\Api\Moleculs\Mentor\MenntorGMeetController;
 use App\Http\Controllers\Api\Moleculs\Parent\RegisterParentController;
+use App\Http\Controllers\Api\Moleculs\Remaja\LinkedAccountParentConroller;
 use App\Http\Controllers\Api\Moleculs\Remaja\RegisterRemajaController;
 use App\Http\Controllers\Api\Organism\ExerciseController;
 use App\Http\Controllers\Api\Organism\GMeetController;
@@ -50,4 +51,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('meet/create', [MentorGMeetController::class,'createMeet']);
     Route::post('meet/publish/{id}', [MentorGMeetController::class,'publishMeet']);
     Route::post('meet/join/{id}', [GMeetController::class,'joinMeet']);
+
+    Route::post('linked', [LinkedAccountParentConroller::class,'linkAccount']);
 });
