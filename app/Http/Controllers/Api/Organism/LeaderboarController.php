@@ -53,7 +53,7 @@ public function getLeaders(Request $request)
             'name' => $leader->user->name,
             'exp' => $leader->exp,
             'star' => $leader->star,
-            'foto' => $baseUrl . '/' . $leader->user->foto
+            'foto' => asset('storage/storage/profile/'.$leader->user->foto)
         ];
     });
 
