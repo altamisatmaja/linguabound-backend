@@ -9,7 +9,7 @@ class Pilihan extends Model
 {
     use HasFactory;
 
-    protected $table_name = "pilihan";
+    protected $table = "pilihan";
 
     protected $fillable = [
         'pilihan',

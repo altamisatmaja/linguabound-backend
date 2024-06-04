@@ -9,46 +9,41 @@ use Illuminate\Support\Facades\Auth;
 
 class LeaderboarController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
+    public function getUserPosition(Request $request)
+{
+    $user = $request->user();
+
+    $currentUser = Remaja::where('user_id', $user->id)->first();
+
+    if (!$currentUser) {
+        return null; // Jika user tidak ditemukan, kembalikan null
     }
 
-    public function getUserPosition()
-    {
-        $user = Auth::guard('api')->user();
+    $leaders = Remaja::orderBy('exp', 'desc')->get();
 
-        $currentUser = Remaja::where('user_id', $user->id)->first();
+    $userPosition = $leaders->search(function ($leader) use ($currentUser) {
+        return $leader->id === $currentUser->id;
+    });
 
-        if (!$currentUser) {
-            return null;
-        }
+    return $userPosition !== false ? $userPosition + 1 : null; // Jika posisi ditemukan, kembalikan posisi + 1
+}
 
-        $leaders = Remaja::orderBy('exp', 'desc')->get();
+public function getLeaders(Request $request)
+{
+    $leaders = Remaja::orderBy('exp', 'desc')->take(10)->get(); // Peroleh 10 pemimpin teratas dengan metode get()
 
-        $userPosition = $leaders->search(function ($leader) use ($currentUser) {
-            return $leader->id === $currentUser->id;
-        });
+    $userPosition = $this->getUserPosition($request);
 
-        return $userPosition !== false ? $userPosition + 1 : null;
-    }
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Data leaderboard berhasil didapatkan',
+        'data' => [
+            'all' => $leaders,
+            'position' => $userPosition
+        ]
+    ]);
+}
 
-
-    public function getLeaders(Request $request)
-    {
-        $leaders = Remaja::orderBy('exp', 'desc')->take(10);
-
-        $userPosition = $this->getUserPosition();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data leaderboard berhasil didapatkan',
-            'data' => [
-                'all' => $leaders,
-                'position' => $userPosition
-            ]
-        ]);
-    }
 
     public function getLeadersFromMentor(Request $request)
     {

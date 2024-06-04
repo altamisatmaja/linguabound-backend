@@ -9,7 +9,7 @@ class ReportExercise extends Model
 {
     use HasFactory;
 
-    protected $table_name = "report_exercise";
+    protected $table = "report_exercise";
 
     protected $fillable = [
         'remaja_id',

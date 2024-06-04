@@ -9,7 +9,7 @@ class Soal extends Model
 {
     use HasFactory;
 
-    protected $table_name = 'soal';
+    protected $table = 'soal';
 
     protected $fillable = [
         'pertanyaan',
