@@ -30,7 +30,7 @@ class UserAuthController extends Controller
             $akun = Mentor::where('user_id', $user->id)->first();
         }
 
-        $user['foto'] = $baseUrl.'/'.$user->foto;
+        $user['foto'] = 'foto' => asset('storage/storage/profile/'.$user->foto;
         // dd($akun);
         $user['detail'] = $akun;
 
