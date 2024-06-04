@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Organism;
 
 use App\Http\Controllers\Controller;
+use App\Models\Parents;
 use App\Models\Remaja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +47,6 @@ public function getLeaders(Request $request)
         ], 404);
     }
 
-
     $leadersWithPhoto = $leaders->map(function ($leader) use ($baseUrl) {
         return [
             'id' => $leader->id,
@@ -57,9 +57,7 @@ public function getLeaders(Request $request)
         ];
     });
 
-
     $userPosition = $this->getUserPosition($request);
-
 
     return response()->json([
         'status' => 'success',
@@ -72,46 +70,77 @@ public function getLeaders(Request $request)
 }
 
 
-
-
     public function getLeadersFromMentor(Request $request)
     {
-        $leaders = Remaja::orderBy('exp', 'desc')->get();
+        $baseUrl = $request->root();
+
+        $leaders = Remaja::with('user')->orderBy('exp', 'desc')->get();
+
+        $leadersWithPhoto = $leaders->map(function ($leader) use ($baseUrl) {
+            return [
+                'id' => $leader->id,
+                'name' => $leader->user->name,
+                'exp' => $leader->exp,
+                'star' => $leader->star,
+                'foto' => $baseUrl . '/' . $leader->user->foto
+            ];
+        });
 
         return response()->json([
             'status' => 'success',
             'message' => 'Data leaderboard berhasil didapatkan',
-            'data' => $leaders
+            'data' => $leadersWithPhoto
         ]);
     }
 
     public function getChildLeaders(Request $request)
-    {
-        $user = Auth::guard('api')->user();
-        $children = Remaja::where('orang_tua_id', $user->id)->get();
+{
+        $baseUrl = $request->root();
+        $user = auth()->user();
 
-        $leaders = Remaja::orderBy('exp', 'desc')->get();
+        $leaders = Remaja::with('user')->orderBy('exp', 'desc')->get();
 
-        $childrenLeaders = $children->map(function ($child) use ($leaders) {
-            return $this->getChildPosition($child, $leaders);
+        $leadersWithPhoto = $leaders->map(function ($leader) use ($baseUrl) {
+            return [
+                'id' => $leader->id,
+                'name' => $leader->user->name,
+                'exp' => $leader->exp,
+                'star' => $leader->star,
+                'foto' => $baseUrl . '/' . $leader->user->foto
+            ];
         });
+
+        $userPosition = $this->getChildPosition($request);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data berhasil didapat',
+            'message' => 'Data leaderboard berhasil didapatkan',
             'data' => [
-                'all' => $leaders,
-                'positions' => $childrenLeaders
+                'leaders' => $leadersWithPhoto,
+                'position' => $userPosition
             ]
         ]);
+}
+
+public function getChildPosition(Request $request)
+{
+    $user = $request->user();
+
+    $currentUsers = Parents::where('user_id', $user->id)->first();
+    $currentUser = Remaja::where('orang_tua_id', $currentUsers->id)->first();
+    // dd($currentUser);
+
+    if (!$currentUser) {
+        return null;
     }
 
-    private function getChildPosition($child, $leaders)
-    {
-        $childPosition = $leaders->search(function ($leader) use ($child) {
-            return $leader->id === $child->id;
-        });
+    $leaders = Remaja::with('user')->orderBy('exp', 'desc')->get();
 
-        return $childPosition !== false ? $childPosition + 1 : null;
-    }
+    $userPosition = $leaders->search(function ($leader) use ($currentUser) {
+        return $leader->id === $currentUser->id;
+    });
+
+    return $userPosition !== false ? $userPosition + 1 : null;
+}
+
 }
