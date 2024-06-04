@@ -30,19 +30,48 @@ class LeaderboarController extends Controller
 
 public function getLeaders(Request $request)
 {
+
+    $baseUrl = $request->root();
+
+
     $leaders = Remaja::with('user')->orderBy('exp', 'desc')->take(10)->get();
+
+
+    if ($leaders->isEmpty()) {
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No leaders found',
+            'data' => []
+        ], 404);
+    }
+
+
+    $leadersWithPhoto = $leaders->map(function ($leader) use ($baseUrl) {
+        return [
+            'id' => $leader->id,
+            'name' => $leader->user->name,
+            'exp' => $leader->exp,
+            'star' => $leader->star,
+            'foto' => $baseUrl . '/' . $leader->user->foto
+        ];
+    });
+
 
     $userPosition = $this->getUserPosition($request);
 
+
     return response()->json([
         'status' => 'success',
-        'message' => 'Data leaderboard berhasil didapatkan',
+        'message' => 'Data berhasil didapatkan',
         'data' => [
-            'all' => $leaders,
+            'leaders' => $leadersWithPhoto,
             'position' => $userPosition
         ]
     ]);
 }
+
+
 
 
     public function getLeadersFromMentor(Request $request)
