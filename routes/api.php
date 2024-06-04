@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\Moleculs\Mentor\MentorAuthController;
 use App\Http\Controllers\Api\Moleculs\Mentor\MentorGMeetController;
 use App\Http\Controllers\Api\Moleculs\Mentor\RegisterMentorController;
 use App\Http\Controllers\Api\Moleculs\Mentor\MenntorGMeetController;
+use App\Http\Controllers\Api\Moleculs\Otp\ForgotPasswordController;
+use App\Http\Controllers\Api\Moleculs\Otp\ResetPasswordController;
 use App\Http\Controllers\Api\Moleculs\Parent\RegisterParentController;
 use App\Http\Controllers\Api\Moleculs\Remaja\LinkedAccountParentConroller;
 use App\Http\Controllers\Api\Moleculs\Remaja\RegisterRemajaController;
@@ -34,6 +36,10 @@ Route::post('login', [UserAuthController::class,'login']);
 Route::post('register/remaja', [RegisterRemajaController::class, 'register']);
 Route::post('register/parent', [RegisterParentController::class, 'register']);
 Route::post('register/mentor', [RegisterMentorController::class, 'register']);
+
+Route::post('password/forgot',[ForgotPasswordController::class,'forgotPassword']);
+Route::post('password/reset',[ResetPasswordController::class,'resetPassword']);
+
 
 Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [UserAuthController::class, 'logout']);
