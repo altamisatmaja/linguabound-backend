@@ -14,7 +14,7 @@ class ProfileAccountRemajaController extends Controller
 {
     $request->validate([
         'name' => 'required|string',
-        'username' => 'required|string',
+        // 'username' => 'required|string',
         'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif',
     ]);
 
@@ -23,9 +23,9 @@ class ProfileAccountRemajaController extends Controller
 
     $user->name = $request->name;
 
-    if ($request->filled('password')) {
-        $user->password = Hash::make($request->password);
-    }
+    // if ($request->filled('password')) {
+    //     $user->password = Hash::make($request->password);
+    // }
 
     if ($request->hasFile('foto')) {
         $foto = $request->file('foto');
@@ -39,8 +39,8 @@ class ProfileAccountRemajaController extends Controller
         $user->foto = $fotoName;
     }
 
-    $remaja->username = $request->username;
-    $remaja->save();
+    // $remaja->username = $request->username;
+    // $remaja->save();
     $user->save();
 
     return response()->json(['message' => 'Profile updated successfully']);
