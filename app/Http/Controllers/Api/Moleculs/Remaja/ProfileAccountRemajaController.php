@@ -15,7 +15,7 @@ class ProfileAccountRemajaController extends Controller
     $request->validate([
         'name' => 'required|string',
         'username' => 'required|string',
-        'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif',
     ]);
 
     $user = auth()->user();
