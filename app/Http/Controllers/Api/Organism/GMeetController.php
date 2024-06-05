@@ -5,26 +5,39 @@ namespace App\Http\Controllers\Api\Organism;
 use App\Http\Controllers\Controller;
 use App\Models\Meet;
 use App\Models\MeetMember;
+use App\Models\Mentor;
 use App\Models\Remaja;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class GMeetController extends Controller
 {
     public function list(){
         $meets = Meet::where('status', 'Sudah dipublish')->get();
-
+    
         $meets->transform(function ($meet) {
-            $meet->materi = asset('storage/materi/' . $meet->materi);
+            $mentor = Mentor::find($meet->mentor_id);
+            if ($mentor) {
+                $user = User::find($mentor->user_id);
+    
+                $meet->materi = asset('storage/materi/' . $meet->materi);
+                $meet->nama_lengkap = $mentor->nama_lengkap;
+                $meet->gelar = $mentor->gelar;
+                $meet->riwayat_pendidikan_terakhir = $mentor->riwayat_pendidikan_terakhir;
+                if ($user) {
+                    $meet->foto = $user->foto;
+                }
+            }
             return $meet;
         });
-
-
+    
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil didapatkan',
             'data' => $meets
         ]);
     }
+    
 
     public function show($id){
         $meet = Meet::where('id', $id)->first();
