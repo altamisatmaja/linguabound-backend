@@ -32,9 +32,9 @@ class ProfileAccountRemajaController extends Controller
         $fotoName = time() . '.' . $foto->getClientOriginalExtension();
         $foto->storeAs('public/storage/profile', $fotoName);
 
-        if ($user->foto) {
-            Storage::delete('public/storage/profile/' . $user->foto);
-        }
+        // if ($user->foto) {
+        //     Storage::delete('public/storage/profile/' . $user->foto);
+        // }
 
         $user->foto = $fotoName;
     }
