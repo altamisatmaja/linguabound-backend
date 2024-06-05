@@ -12,14 +12,15 @@ use Illuminate\Http\Request;
 
 class GMeetController extends Controller
 {
-    public function list(){
+    public function list()
+    {
         $meets = Meet::where('status', 'Sudah dipublish')->get();
-    
+
         $meets->transform(function ($meet) {
             $mentor = Mentor::find($meet->mentor_id);
             if ($mentor) {
                 $user = User::find($mentor->user_id);
-    
+
                 $meet->materi = asset('storage/materi/' . $meet->materi);
                 $meet->nama_lengkap = $mentor->nama_lengkap;
                 $meet->gelar = $mentor->gelar;
@@ -30,25 +31,38 @@ class GMeetController extends Controller
             }
             return $meet;
         });
-    
+
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil didapatkan',
             'data' => $meets
         ]);
     }
-    
 
-    public function show($id){
-        $meet = Meet::where('id', $id)->first();
+    public function show($id)
+    {
+        $meets = Meet::where('id', $id)->first();
 
-        $meet['materi'] = asset('storage/materi/'.$meet->materi);
+        $mentor = Mentor::find($meets->mentor_id);
+        if ($mentor) {
+            $user = User::find($mentor->user_id);
+
+            $meets->materi = asset('storage/materi/' . $meets->materi);
+            $meets->nama_lengkap = $mentor->nama_lengkap;
+            $meets->gelar = $mentor->gelar;
+            $meets->riwayat_pendidikan_terakhir = $mentor->riwayat_pendidikan_terakhir;
+            if ($user) {
+                $meets->foto = $user->foto;
+            }
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil didapatkan',
-            'data' => $meet
+            'data' => $meets
         ]);
     }
+
     public function joinMeet(Request $request, $meet_id)
     {
         $user = $request->user();
