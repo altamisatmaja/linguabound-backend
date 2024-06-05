@@ -26,7 +26,7 @@ class GMeetController extends Controller
                 $meet->gelar = $mentor->gelar;
                 $meet->riwayat_pendidikan_terakhir = $mentor->riwayat_pendidikan_terakhir;
                 if ($user) {
-                    $meet->foto = $user->foto;
+                    $meet->foto = asset('storage/storage/profile/'.$user->foto);
                 }
             }
             return $meet;
@@ -52,7 +52,7 @@ class GMeetController extends Controller
             $meets->gelar = $mentor->gelar;
             $meets->riwayat_pendidikan_terakhir = $mentor->riwayat_pendidikan_terakhir;
             if ($user) {
-                $meets->foto = $user->foto;
+                $meets->foto = asset('storage/storage/profile/'.$user->foto);
             }
         }
 
