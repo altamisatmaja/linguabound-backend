@@ -85,6 +85,7 @@ class UserAuthController extends Controller
     $user->save();
 
     $user['detail'] = $akun;
+    $user['foto'] = asset('storage/storage/profile/'.$user->foto);
 
     return response()->json([
         'status' => 'success',
