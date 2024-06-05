@@ -38,6 +38,7 @@ class MentorAuthController extends Controller
 
         $user->api_token = $token;
         $user->save();
+        $user['foto'] = asset('storage/storage/profile/'.$user->foto);
         $user['detail'] = $mentor;
 
         return response()->json([
