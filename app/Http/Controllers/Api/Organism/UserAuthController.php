@@ -176,12 +176,12 @@ class UserAuthController extends Controller
 
         $user = auth()->user();
 
-        if (Hash::check($request->old_password, $user->password)) {
-           return response()->json([
-            'status' => 'failed',
-            'message' => 'Harap masukkan password lama yang sesuai!'
-           ], 401);
-        }
+        // if (Hash::check($request->old_password, $user->password)) {
+        //    return response()->json([
+        //     'status' => 'failed',
+        //     'message' => 'Harap masukkan password lama yang sesuai!'
+        //    ], 401);
+        // }
 
         $user->password = Hash::make($request->password);
 
